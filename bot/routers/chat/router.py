@@ -99,7 +99,7 @@ async def read_rules(call: CallbackQuery):
         )
         await call.bot.delete_message(call.message.chat.id, call.message.message_id)
     else:
-        await call.answer("Кнопка не для тебя")
+        await call.answer("Эта кнопка не для тебя")
 
 
 @chat_router.callback_query(VisitorFilter())

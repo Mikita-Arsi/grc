@@ -1,5 +1,3 @@
-from abc import ABC
-
 from aiogram import Bot
 from aiogram.enums import ChatMemberStatus
 from aiogram.filters import Filter

@@ -1,7 +1,9 @@
+import os
+
 from aiogram import Router
 from aiogram.enums import ChatMemberStatus
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, FSInputFile
 from aiogram.filters import Command
 from asyncpg import UniqueViolationError
 
@@ -146,15 +148,22 @@ async def show_visitors(call: CallbackQuery):
 async def edit_event(call: CallbackQuery, state: FSMContext):
     event_id = int(call.data.split(":")[1])
     event = (await GRCEvent.objects.get(id=event_id)).__dict__
-    await GRCEvent.objects.delete(id=event_id)
+    event['ev_id'] = event['id']
     del event['id']
     await GRCEventCreator.objects.filter(id=1).update(**event)
     await state.set_state(EventEditorState.title)
-    await call.message.answer(
-        event_constructor(**event),
-        parse_mode='HTML',
-        disable_web_page_preview=True
-    )
+    if os.path.exists("img.png"):
+        await call.message.answer_photo(
+            FSInputFile("img.png", "img.png"),
+            caption=event_constructor(**event),
+            parse_mode='HTML',
+            disable_web_page_preview=True
+        )
+    else:
+        await call.message.answer(
+            event_constructor(**event),
+            parse_mode='HTML',
+            disable_web_page_preview=True)
     await call.message.answer(
         f"<i>{new_event_texts['title']}</i>", parse_mode='HTML',
         reply_markup=save_keyboard(back=None, edit='title', next='description', is_save=None)

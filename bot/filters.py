@@ -52,6 +52,11 @@ class ArchiveCallbackFilter(Filter):
         return call.data.split(':')[0] == 'archive'
 
 
+class CreatorFilter(Filter):
+    async def __call__(self, call: CallbackQuery, bot: Bot) -> bool:
+        return call.data.split(':')[0] == 'creator'
+
+
 class ViewFilter(Filter):
     async def __call__(self, call: CallbackQuery, bot: Bot) -> bool:
         return call.data.split(':')[-1] == 'view'
@@ -75,6 +80,11 @@ class AddFilter(Filter):
 class EditFilter(Filter):
     async def __call__(self, call: CallbackQuery, bot: Bot) -> bool:
         return call.data.split(':')[-1] == 'edit'
+
+
+class DeleteFilter(Filter):
+    async def __call__(self, call: CallbackQuery, bot: Bot) -> bool:
+        return call.data.split(':')[-1] == 'delete'
 
 
 class VisitorFilter(Filter):

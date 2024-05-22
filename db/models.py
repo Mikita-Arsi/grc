@@ -33,6 +33,7 @@ class GRCEventCreator(ormar.Model):
     ormar_config = ormar_base_config.copy()
 
     id: int = ormar.Integer(primary_key=True, autoincrement=True)
+    ev_id: int = ormar.Integer(nullable=True)
     datetime: datetime = ormar.DateTime(nullable=True)
     location: str = ormar.String(max_length=300, nullable=True)
     location_url: str = ormar.String(max_length=300, nullable=True)

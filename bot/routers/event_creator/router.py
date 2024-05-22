@@ -12,7 +12,7 @@ from bot.filters import (
     PrivateMessageFilter,
     EventCreatorCallbackFilter,
     EventCreatorStateFilter,
-    SaveEventFilter
+    SaveEventFilter, DeleteFilter, CreatorFilter
 )
 from bot.states import EventEditorState
 from db import GRCEventCreator, GRCEvent
@@ -59,7 +59,13 @@ async def save_event(call: CallbackQuery, bot: Bot, state: FSMContext):
     await state.clear()
     new_event = (await GRCEventCreator.objects.first()).__dict__
     del new_event['id']
-    await GRCEvent.objects.create(**new_event)
+    if new_event['ev_id']:
+        event: GRCEvent = await GRCEvent.objects.get(id=new_event['ev_id'])
+        del new_event['ev_id']
+        await event.upsert(**new_event)
+    else:
+        del new_event['ev_id']
+        await GRCEvent.objects.create(**new_event)
     await call.message.answer("Собрание успешно сохранено")
     await GRCEventCreator.objects.delete(id=1)
     await GRCEventCreator.objects.create(id=1)
@@ -105,3 +111,11 @@ async def edit_param(message: Message, bot: Bot, state: FSMContext):
         f"<i>{new_event_texts[step]}</i>", parse_mode='HTML',
         reply_markup=save_keyboard(back=back_step, edit=step, next=next_step, is_save=is_save)
     )
+
+
+@event_creator_router.callback_query(CreatorFilter(), DeleteFilter())
+async def delete_draft(call: CallbackQuery, bot: Bot, state: FSMContext):
+    await state.clear()
+    await GRCEventCreator.objects.delete(id=1)
+    await GRCEventCreator.objects.create(id=1)
+    await call.message.answer("Черновик удалён")

@@ -35,13 +35,14 @@ def refactor_themes(themes: str = None):
 
 
 def event_constructor(
-        id,
         title: str = None,
         description: str = None,
         themes: str = None,
         location: str = None,
         location_url: str = None,
-        datetime: dt = None
+        datetime: dt = None,
+        id: int = None,
+        ev_id: int = None
 ) -> str:
     title = f"📚<b><u>{title}</u></b>" if title else ''
     description = f"\n\n‼️{description}" if description else ''

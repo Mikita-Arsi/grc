@@ -15,7 +15,7 @@ def save_keyboard(edit: str, next: str = None, back: str = None, is_save: bool =
         sizes.append(1)
         builder.button(text='Сохранить', callback_data='event_creator:save')
     sizes.append(1)
-    builder.button(text='Удалить черновик', callback_data=f'event_creator:{edit}:next')
+    builder.button(text='Удалить черновик', callback_data=f'creator:{edit}:delete')
     builder.adjust(*sizes)
     return builder.as_markup()
 

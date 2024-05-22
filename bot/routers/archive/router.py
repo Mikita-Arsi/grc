@@ -145,13 +145,13 @@ async def show_visitors(call: CallbackQuery):
 @archive_router.callback_query(ArchiveCallbackFilter(), EditFilter())
 async def edit_event(call: CallbackQuery, state: FSMContext):
     event_id = int(call.data.split(":")[1])
-    event = await GRCEvent.objects.get(id=event_id)
+    event = (await GRCEvent.objects.get(id=event_id)).__dict__
     await GRCEvent.objects.delete(id=event_id)
     del event['id']
     await GRCEventCreator.objects.filter(id=1).update(**event)
     await state.set_state(EventEditorState.title)
     await call.message.answer(
-        event_constructor(**event.__dict__),
+        event_constructor(**event),
         parse_mode='HTML',
         disable_web_page_preview=True
     )

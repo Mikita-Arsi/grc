@@ -14,7 +14,7 @@ from bot.filters import (
     EventCreatorStateFilter,
     SaveEventFilter, DeleteFilter, CreatorFilter
 )
-from bot.states import EventEditorState
+from bot.states import EventEditorStates
 from db import GRCEventCreator, GRCEvent
 from bot.texts import new_event_title_text, new_event_texts, event_constructor, steps
 from .keyboards import save_keyboard, cancel_keyboard
@@ -27,7 +27,7 @@ event_creator_router = Router(name="event_creator")
 async def step_manage(call: CallbackQuery, bot: Bot, state: FSMContext):
     step = call.data.split(':')[1]
     action = call.data.split(':')[2]
-    await state.set_state(EventEditorState.__dict__[step])
+    await state.set_state(EventEditorStates.__dict__[step])
     event_creator = await GRCEventCreator.objects.first()
     points = event_creator.__dict__
     points["img"] = "img.png" if os.path.exists("img.png") else None
@@ -73,7 +73,7 @@ async def save_event(call: CallbackQuery, bot: Bot, state: FSMContext):
 
 @event_creator_router.message(AdminFilter(), PrivateMessageFilter(), Command(commands=['new_event']))
 async def create_event(message: Message, bot: Bot, state: FSMContext):
-    await state.set_state(EventEditorState.title)
+    await state.set_state(EventEditorStates.title)
     await message.answer(f"Введите {new_event_title_text}")
 
 

@@ -1,15 +1,13 @@
 import logging
-from contextlib import asynccontextmanager
-
-import databases
-import sqlalchemy
 import uvicorn
+
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from aiogram import Bot, Dispatcher, types
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from config import token, webhook_url, DB
+from config import token, webhook_url
 from init_db import ormar_base_config
 from bot.routers import register_base_handlers
 

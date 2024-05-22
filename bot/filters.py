@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
 from .const import main_chat_id, admin_chat_id
-from .states import EventEditorState
+from .states import EventEditorStates
 
 
 class AdminFilter(Filter):
@@ -34,7 +34,7 @@ class ChatMemberFilter(Filter):
 
 class EventCreatorStateFilter(Filter):
     async def __call__(self, message: Message, bot: Bot, state: FSMContext) -> bool:
-        return (await state.get_state()) in EventEditorState.__all_states__
+        return (await state.get_state()) in EventEditorStates.__all_states__
 
 
 class EventCreatorCallbackFilter(Filter):

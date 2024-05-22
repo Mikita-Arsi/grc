@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from aiogram import Router, F
 from aiogram.filters import Command
-from aiogram.types import Message, FSInputFile, CallbackQuery, ChatPermissions
+from aiogram.types import Message, FSInputFile, CallbackQuery, ChatPermissions, ChatMember
 from asyncpg import UniqueViolationError
 
 from db import GRCEvent, GRCVisitor, GRCUser
@@ -52,7 +52,6 @@ async def show_rules(message: Message):
 
 @chat_router.message(F.new_chat_members, ChatMessageFilter())
 async def repost_event(message: Message):
-
     await message.bot.restrict_chat_member(
         message.chat.id,
         message.from_user.id,
@@ -117,9 +116,9 @@ async def write_visitor(call: CallbackQuery):
     event_id = int(call.data.split(":")[1])
     is_online = call.data.split(":")[-1] == 'online'
     visitor = await GRCVisitor.objects.get_or_none(
-            tg_id=call.from_user.id,
-            event_id=event_id
-            )
+        tg_id=call.from_user.id,
+        event_id=event_id
+    )
     if visitor:
         if visitor.is_online != is_online:
             await visitor.upsert(is_online=is_online)

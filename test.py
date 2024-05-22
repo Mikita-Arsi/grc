@@ -16,8 +16,8 @@ async def test():
     if not db.is_connected:
         await db.connect()
     ormar_base_config.metadata.create_all(ormar_base_config.engine)
-    print(await GRCEvent.objects.all())
-
+    new_event = (await GRCEvent.objects.all())[-1]
+    await new_event.delete()
     if db.is_connected:
         await db.disconnect()
 

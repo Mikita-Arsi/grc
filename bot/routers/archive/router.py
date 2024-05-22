@@ -12,7 +12,7 @@ from .keyboards import archive_keyboard, event_keyboard, back_to_event_keyboard,
 from ..event_creator.keyboards import save_keyboard
 from ...const import admin_chat_id
 from ...texts import event_constructor, new_event_texts
-from ...states import ProtocolEditorState, EventEditorState
+from ...states import ProtocolEditorState, EventEditorStates
 from ...filters import (
     PrivateMessageFilter,
     ChatMemberFilter,
@@ -44,7 +44,7 @@ async def show_archive(message: Message):
 @archive_router.callback_query(ArchiveCallbackFilter(), ViewFilter())
 async def view_event(call: CallbackQuery):
     event = await GRCEvent.objects.get(id=int(call.data.split(':')[1]))
-    chat_member = await call.bot.get_chat_member(admin_chat_id, call.message.from_user.id)
+    chat_member = await call.bot.get_chat_member(admin_chat_id, call.from_user.id)
     is_admin = chat_member.status != ChatMemberStatus.LEFT
     if call.data.split(':')[2] == "edit_message":
         await call.message.edit_text(
@@ -151,7 +151,7 @@ async def edit_event(call: CallbackQuery, state: FSMContext):
     event['ev_id'] = event['id']
     del event['id']
     await GRCEventCreator.objects.filter(id=1).update(**event)
-    await state.set_state(EventEditorState.title)
+    await state.set_state(EventEditorStates.title)
     if os.path.exists("img.png"):
         await call.message.answer_photo(
             FSInputFile("img.png", "img.png"),

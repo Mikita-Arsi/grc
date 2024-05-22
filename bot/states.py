@@ -1,7 +1,7 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
-class EventEditorState(StatesGroup):
+class EventEditorStates(StatesGroup):
     title = State()
     description = State()
     themes = State()

@@ -5,11 +5,12 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from asyncpg import UniqueViolationError
 
-from db import GRCEvent, GRCProtocol, GRCUser, GRCVisitor
+from db import GRCEvent, GRCProtocol, GRCUser, GRCVisitor, GRCEventCreator
 from .keyboards import archive_keyboard, event_keyboard, back_to_event_keyboard, visitor_keyboard
+from ..event_creator.keyboards import save_keyboard
 from ...const import admin_chat_id
-from ...texts import event_constructor
-from ...states import ProtocolEditorState
+from ...texts import event_constructor, new_event_texts
+from ...states import ProtocolEditorState, EventEditorState
 from ...filters import (
     PrivateMessageFilter,
     ChatMemberFilter,
@@ -18,7 +19,10 @@ from ...filters import (
     StepArchiveFilter,
     ProtocolFilter,
     AddFilter,
-    EditFilter, AdminFilter, MarkFilter, ArchiveMarkFilter
+    EditFilter,
+    AdminFilter,
+    MarkFilter,
+    ArchiveMarkFilter
 )
 
 archive_router = Router(name="archive")
@@ -136,6 +140,24 @@ async def show_visitors(call: CallbackQuery):
             parse_mode="HTML",
             reply_markup=visitor_keyboard(user.tg_id, i.event_id)
         )
+
+
+@archive_router.callback_query(ArchiveCallbackFilter(), EditFilter())
+async def edit_event(call: CallbackQuery, state: FSMContext):
+    event_id = int(call.data.split(":")[1])
+    event = await GRCEvent.objects.get(id=event_id)
+    del event['id']
+    await GRCEventCreator.objects.filter(id=1).update(**event)
+    await state.set_state(EventEditorState.title)
+    await call.message.answer(
+        event_constructor(**event.__dict__),
+        parse_mode='HTML',
+        disable_web_page_preview=True
+    )
+    await call.message.answer(
+        f"<i>{new_event_texts['title']}</i>", parse_mode='HTML',
+        reply_markup=save_keyboard(back=None, edit='title', next='description', is_save=None)
+    )
 
 
 @archive_router.callback_query(MarkFilter())

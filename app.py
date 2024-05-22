@@ -55,7 +55,6 @@ app.state.database = ormar_base_config.database
 async def bot_webhook(update: dict) -> None:
     telegram_update = types.Update(**update)
     try:
-        print(telegram_update.message.chat.id, telegram_update.message.chat.full_name)
         await dp.feed_update(bot=bot, update=telegram_update)
     except Exception as e:
         logging.error(e, exc_info=e)

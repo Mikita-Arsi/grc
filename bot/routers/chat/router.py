@@ -9,7 +9,7 @@ from db import GRCEvent, GRCVisitor, GRCUser
 from .keyboards import visit_keyboard, new_member_keyboard, rules_keyboard
 from ...texts import event_constructor
 from ...const import forum_id, main_chat_id
-from ...filters import VisitorFilter, AdminFilter, ChatMessageFilter, RulesFilter
+from ...filters import VisitorFilter, AdminFilter, ChatMessageFilter, RulesFilter, ChatMemberFilter
 
 chat_router = Router(name="chat")
 
@@ -42,7 +42,7 @@ async def publish_event(message: Message):
     )
 
 
-@chat_router.message(Command(commands=['rules', 'правила']))
+@chat_router.message(ChatMemberFilter(), Command(commands=['rules', 'правила']))
 async def show_rules(message: Message):
     await message.reply(
         "Правила great.russian.club",

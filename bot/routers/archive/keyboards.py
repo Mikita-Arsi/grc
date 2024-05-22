@@ -44,6 +44,7 @@ def event_keyboard(ev_id: str, is_admin: bool = False):
     if is_admin:
         builder.button(text='Добавить протокол', callback_data=f'protocol:{ev_id}:add')
         builder.button(text='Изменить протокол', callback_data=f'protocol:{ev_id}:edit')
+        builder.button(text='Изменить протокол', callback_data=f'archive:{ev_id}:edit')
         builder.button(text='Отметка присутствующих', callback_data=f'archive:{ev_id}:mark')
 
     builder.adjust(1, 1, 1, 1)

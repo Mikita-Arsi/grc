@@ -1,9 +1,9 @@
 from config import is_deploy
 
-admin_chat_id = -1002097272095
+admin_chat_id = ...
 if is_deploy:
-    main_chat_id = -1001723650175
+    main_chat_id = ...
     forum_id = 24502
 else:
-    main_chat_id = -1002091679813
+    main_chat_id = ...
     forum_id = 2

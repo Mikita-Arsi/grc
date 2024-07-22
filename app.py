@@ -63,7 +63,7 @@ def main():
         try:
             uvicorn.run("app:app", host="0.0.0.0", port=80, reload=True)
         except Exception as e:
-            logging.error(e)
+            logging.error(e, exc_info=e)
 
 
 if __name__ == "__main__":

@@ -59,7 +59,11 @@ async def repost_event(message: Message):
     )
 
     await message.answer(
-        f'<a href="tg://user?id={message.from_user.id}">{message.from_user.full_name}</a>, для получения возможности писать сообщения в чате ознакомьтесь с нашими правилами',
+        f"""<a href="tg://user?id={
+            message.from_user.id
+            }">{
+                message.from_user.full_name
+            }</a>, для получения возможности писать сообщения в чате ознакомьтесь с нашими правилами""",
         parse_mode="HTML",
         reply_markup=new_member_keyboard(message.from_user.id)
     )

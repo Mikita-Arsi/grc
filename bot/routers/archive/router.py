@@ -138,7 +138,9 @@ async def show_visitors(call: CallbackQuery):
     for i in visitors:
         user = await GRCUser.objects.get(tg_id=i.tg_id)
         await call.message.answer(
-            f'<a href="tg://user?id={user.tg_id}">{user.first_name}{" " + user.last_name if user.last_name else ""}</a>\nУказано: {"онлайн" if i.is_online else "оффлайн"}',
+            f"""<a href="tg://user?id={user.tg_id}">{user.first_name}{
+                " " + user.last_name if user.last_name else ""
+                }</a>\nУказано: {"онлайн" if i.is_online else "оффлайн"}""",
             parse_mode="HTML",
             reply_markup=visitor_keyboard(user.tg_id, i.event_id)
         )
